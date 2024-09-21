@@ -1,14 +1,13 @@
-const { stdin } = require("process");
 const readline = require("readline");
-const { gunzipSync } = require("zlib");
+
 
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
+//rl.close();
 
-
-let secretNumber = 5;
+let secretNumber;
 
 function checkGuess(guess) {
     guess = Number(guess);
@@ -36,6 +35,14 @@ function checkGuess(guess) {
     }
 }
 
+function randomInRange(min, max) {
+    min = Number(min);
+    max = Number(max);
+    const minCeiled = Math.ceil(min);
+    const maxFloored = Math.floor(max);
+    return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
+}
+
 function askGuess() {
     rl.question("Enter a guess: ", answer => {
         checkGuess(answer);
@@ -43,8 +50,24 @@ function askGuess() {
     });
 };
 
+function askRange() {
+    let maximum = 0;
+    let minimum = 0;
+    rl.question("Enter a max number: ", handle1);
+    function handle1(answer) {
+        maximum = answer;
+        rl.question("Enter a min number: ", handle2);
+    }
+
+    function handle2(answer) {
+        minimum = answer;
+        console.log(`I'm thinking of a number between ${minimum} and ${maximum}... `);
+        secretNumber = randomInRange(maximum, minimum);
+        askGuess();
+    }
+}
 
 
-askGuess();
 
-//code review, por favor
+
+askRange();
